@@ -82,14 +82,77 @@ const start = () => {
 
 
 
+  const updateEmployee = () => {
+    // query the database for all items being auctioned
+    connection.query('SELECT * FROM employee', (err, results) => {
+      if (err) throw err;
+      // once you have the items, prompt the user for which they'd like to bid on
+      inquirer
+        .prompt([
+          {
+            name: 'choice',
+            type: 'rawlist',
+            choices() {
+              const choiceArray = [];
+              results.forEach(({ id }) => {
+                choiceArray.push(id);
+              });
+              return choiceArray;
+            },
+          },
+          {
+            name: 'update',
+            type: 'input',
+            message: 'What employee id would you like to update ?',
+          },
+        ])
+        .then((answer) => {
+          // get the information of the chosen item
+          let chosenEmployee;
+          results.forEach((employee) => {
+            if (employee.id === answer.choice) {
+              chosenEmployee = employee;
+            }
+          });
+  
+          // determine if bid was high enough
+          if (chosenEmployee == !NULL)push(employee.id) {
+            // bid was high enough, so update db, let the user know, and start over
+            connection.query(
+              'UPDATE employee SET ? WHERE ?',
+              [
+                {
+                  chosenEmployee: employee.id,
+                },
+                {
+                  id: chosenEmployee.id,
+                },
+              ],
+              (error) => {
+                if (error) throw err;
+                console.log('Update successful!');
+                start();
+              }
+            );
+          } else {
+            // bid wasn't high enough, so apologize and start over
+            console.log('Update FAILED');
+            start();
+          }
+        });
+    });
+  };
 
 
-const viewDB = () => {
-    console.log('viewing all data from DB...\n');
-    connection.query('SELECT * FROM employee_db', (err, res) => {
-    if (err) throw err;
-    console.log(res);
-    connection.end();
-});
-};
+
+
+
+// const viewDB = () => {
+//     console.log('viewing all data from DB...\n');
+//     connection.query('SELECT * FROM employee_db', (err, res) => {
+//     if (err) throw err;
+//     console.log(res);
+//     connection.end();
+// });
+// };
 
