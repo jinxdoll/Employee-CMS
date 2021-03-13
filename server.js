@@ -2,6 +2,7 @@ const mysql = require("mysql");
 const inquirer = require("inquirer");
 const consoleTable = require("console.table");
 
+
 const connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
@@ -10,45 +11,13 @@ const connection = mysql.createConnection({
   database: "employee_db",
 });
 
-
-
-
 connection.connect((err) => {
   if (err) throw err;
   console.log(`connected as id ${connection.threadId}`);
-  start()
+  start();
 });
 
-// const ViewDept = () => {
-//   console.log('Selecting all departments...\n');
-//   connection.query('SELECT * FROM department', (err, res) => {
-//     if (err) throw err;
-//     console.log(res);
-//     connection.end();
-//   });
-// };
 
-// const updateDept = () => {
-//   console.log('Updating department...\n');
-//   const query = connection.query(
-//     'UPDATE products SET ? WHERE id = :id AND department_name = :department_name;', (err, res) => {
-//       if (err) throw err;
-//       console.log(`${res.affectedRows} department updated!\n`);
-// Call deleteProduct AFTER the UPDATE completes
-// deleteProduct();
-//   }
-// );
-
-// const createDept = () => {
-//   console.log('Inserting a new department...\n');
-//   const query = connection.query(
-//     'SELECT * FROM department where id = :id AND department_name = :department_name;', (err, res) => {
-//       if (err) throw err;
-//       console.log(`${res.affectedRows} department inserted!\n`);
-// Call updateDept AFTER the INSERT completes
-//     updateDept();
-//   }
-// );
 
 // function which prompts the user for what action they should take
 
@@ -98,21 +67,18 @@ const start = () => {
         case "Update employee role":
           updateEmployee();
           break;
-    
 
         case "EXIT":
           connection.end();
           break;
       }
     });
-    
-  // logs the actual query being run
-  // console.log(query.sql);
-  // connection.end();
 
 };
 
 const viewDept = () => {
+  console.log('Selecting all departments...\n');
+
   inquirer
     .prompt({
       name: "departmentName",
@@ -120,21 +86,26 @@ const viewDept = () => {
       message: "What department would you like to search for?",
     })
     .then((answer) => {
-      const query = "SELECT department_name FROM department WHERE ?";
-      connection.query(query, { department_name: answer.departmentName },
+      const query = "SELECT * FROM department";
+      connection.query(
+        query,
+       
         (err, res) => {
           if (err) throw err;
-          res.forEach(({ department_name }) => {
-            console.table('Department table is:'+ department_name)
-            console.log(`You are now viewing the ${department_name} department`);
-          });
-          start();
+        
+            console.table(res);
+          console.log("Departments viewed!\n");
+         
+        start();
         }
       );
     });
 };
 
+
+
 const viewEmployee = () => {
+  console.log('Selecting all employees...\n');
   inquirer
     .prompt({
       name: "lastName",
@@ -143,19 +114,25 @@ const viewEmployee = () => {
         "What is the last name of the employee you would like to search for?",
     })
     .then((answer) => {
-      const query = "SELECT last_name, first_name, role_id FROM employee WHERE ?";
-      connection.query(query, { last_name: answer.lastName }, (err, res) => {
+      const query = "SELECT * FROM employee";
+      connection.query(query, (err, res) => {
         if (err) throw err;
-        res.forEach(({  last_name, first_name, role_id }) => {
-          console.log(
-            `You are now viewing the employee: ${first_name} ${last_name}. The employee role ID is: ${role_id} and the employee manager ID is: ${manager_id}`);
-        });
+        // res.forEach(({ lastName }) => {
+      
+          // console.table(
+          //   `last_name: ${lastName} || first_name: ${firstName} || role_id: ${roleId}`);
+          console.table(res);
+          console.log("Employees viewed!\n");
+        // });
+   
         start();
       });
     });
 };
 
+
 const viewRole = () => {
+  console.log('Selecting all roles...\n');
   inquirer
     .prompt({
       name: "title",
@@ -163,21 +140,24 @@ const viewRole = () => {
       message: "What role title would like to search for?",
     })
     .then((answer) => {
-      const query = "SELECT title, salary, department_id FROM role WHERE ?";
+      const query = "SELECT * FROM role";
       connection.query(query, { title: answer.title }, (err, res) => {
         if (err) throw err;
-        res.forEach(({ title, salary, department_id }) => {
-          console.log(
-            `You are now viewing the role: ${title}. The salary is: ${salary}. The department id is: ${department_id}`);
-        });
+        // res.forEach(({ title, salary, department_id }) => {
+          // console.log(
+          //   `You are now viewing the role: ${title}. The salary is: ${salary}. The department id is: ${department_id}`
+          console.table(res);
+          console.log("Roles viewed!\n");
+          
+        // });
         start();
       });
     });
 };
 
-// function to handle posting new items up for auction
+
 const addEmployee = () => {
-  // prompt for info about the item being put up for auction
+
   inquirer
     .prompt([
       {
@@ -193,17 +173,16 @@ const addEmployee = () => {
       {
         name: "roleId",
         type: "input",
-        message: "What is the employee role id ?",
+        message: "What is the employee role id (use a number)?",
       },
       {
         name: "managerId",
         type: "input",
-        message: "What is the employee manager id ?",
+        message: "What is the employee manager id (use a number) ?",
       },
- 
     ])
     .then((answer) => {
-      // when finished prompting, insert a new item into the db with that info
+ 
       connection.query(
         "INSERT INTO employee SET ?",
 
@@ -216,7 +195,7 @@ const addEmployee = () => {
         (err) => {
           if (err) throw err;
           console.log("The employee was created successfully!");
-          // re-prompt the user for if they want to bid or post
+        
           start();
         }
       );
@@ -224,7 +203,7 @@ const addEmployee = () => {
 };
 
 const addDept = () => {
-  // prompt for info about the item being put up for auction
+
   inquirer
     .prompt([
       {
@@ -232,10 +211,9 @@ const addDept = () => {
         type: "input",
         message: "What is the name of the department you would like to add ?",
       },
-
     ])
     .then((answer) => {
-      // when finished prompting, insert a new item into the db with that info
+     
       connection.query(
         "INSERT INTO department SET ?",
 
@@ -244,8 +222,8 @@ const addDept = () => {
         },
         (err) => {
           if (err) throw err;
-          console.log(`The department was created successfully!`);
-          // re-prompt the user for if they want to bid or post
+          console.log("The department was created successfully!");
+         
           start();
         }
       );
@@ -253,7 +231,7 @@ const addDept = () => {
 };
 
 const addRole = () => {
-  // prompt for info about the item being put up for auction
+  // prompt for info about the role
   inquirer
     .prompt([
       {
@@ -271,10 +249,9 @@ const addRole = () => {
         type: "input",
         message: "What is the department id ? ",
       },
- 
     ])
     .then((answer) => {
-      // when finished prompting, insert a new item into the db with that info
+     
       connection.query(
         "INSERT INTO role SET ?",
 
@@ -286,7 +263,7 @@ const addRole = () => {
         (err) => {
           if (err) throw err;
           console.log("The department was created successfully!");
-          // re-prompt the user for if they want to bid or post
+         
           start();
         }
       );
@@ -294,83 +271,74 @@ const addRole = () => {
 };
 
 const updateEmployee = () => {
-  // query the database for all items being auctioned
+  // query the database for all 
   connection.query("SELECT * FROM employee", (err, results) => {
     if (err) throw err;
-    // once you have the items, prompt the user for which they'd like to bid on
+    const choiceArray = [];
+    results.forEach(({ id }) => {
+      choiceArray.push(id);
+    });
     inquirer
       .prompt([
         {
-          name: "choice",
+          name: "id",
           type: "rawlist",
           choices() {
-            const choiceArray = [];
-            results.forEach(({ id }) => {
-              choiceArray.push(id);
-            });
+            // const choiceArray = [];
+            // results.forEach(({ id }) => {
+            //   choiceArray.push(id);
+            // });
             return choiceArray;
           },
           message: "What is the employee id ?",
+          
         },
         {
           name: "lastName",
           type: "input",
-          message: "What is the update last name ?",
+          message: "What is the updated last name ?",
         },
         {
           name: "firstName",
           type: "input",
           message: "What is the updated first name ?",
-          validate(value) {
-            if (isNaN(value) === false) {
-              return true;
-            }
-            return false;
-          },
+      
         },
       ])
       .then((answer) => {
-        // get the information of the chosen item
-        let chosenEmployee;
-        results.forEach((id) => {
-          if (lastName.last_name && firstName.first_name === answer.choice) {
-            chosenEmployee = id;
-          }
-        });
+      //  console.log(answer);
+        let chosenEmployee = answer;
+        results.forEach((result) => {
+          // console.log(result);
+  
 
-        // determine if bid was high enough
-        if (chosenEmployee.id == !NULL) {
-          // bid was high enough, so update db, let the user know, and start over
+      // console.log(chosenEmployee.id);
+      // console.log(result.id);
+        if (chosenEmployee.id  === result.id) {
+          console.log("if statement reached");
+       
           connection.query(
-            "UPDATE employee SET ? WHERE ?",
+            "UPDATE employee SET first_name = ?, last_name = ? WHERE id = ?;",
             [
-              {
-                last_name: answer.lastName,
-                first_name: answer.firstName,
-              },
-              {
-                id: chosenEmployee.id,
-              },
+                          answer.lastName, answer.firstName,chosenEmployee.id
+            
+             
             ],
-            (error) => {
+            (error, result) => {
               if (error) throw err;
-              console.log("Update successful!");
-              start();
+              console.log(result);
+              // start();
             }
           );
         } else {
           console.log("Update failed. Please try again...");
-          start();
+          
         }
       });
-  });
-};
-
-// const viewDB = () => {
-//   console.log("viewing all data from DB...\n");
-//   connection.query("SELECT * FROM employee_db", (err, res) => {
-//     if (err) throw err;
-//     console.log(res);
-//     connection.end();
-//   });
-// };
+      start()
+  }) 
+  .catch(err =>{
+    console.log(err);
+  })
+});
+}

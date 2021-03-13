@@ -1,18 +1,25 @@
+DROP TABLE IF EXISTS;
+
 INSERT INTO department (department_name)
 VALUES ('Singing');
 INSERT INTO department (department_name)
 VALUES ('Acting');
+INSERT INTO department (department_name)
+VALUES ('Production');
 
 INSERT INTO role (title, salary, department_id)
 VALUES ('Singer', '1234.00', 500);
 INSERT INTO role (title, salary, department_id)
 VALUES ('Actor', '789.00', 4001);
+INSERT INTO role (title, salary, department_id)
+VALUES ('Producer', '99999.00', 8745);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ('Mariah', 'Carey', '9999', 123);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ('Patrick', 'Schwayze', '3333', 456);
-
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ('Tom', 'harold', '777', 8989898);
 
 
 
