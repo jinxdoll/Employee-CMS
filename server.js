@@ -155,3 +155,23 @@ const viewEmployee = () => {
     });
 };
 
+const viewRole = () => {
+  inquirer
+    .prompt({
+      name: "title",
+      type: "input",
+      message: "What role title would like to search for?",
+    })
+    .then((answer) => {
+      const query = "SELECT title, salary, department_id FROM role WHERE ?";
+      connection.query(query, { title: answer.title }, (err, res) => {
+        if (err) throw err;
+        res.forEach(({ title, salary, department_id }) => {
+          console.log(
+            `You are now viewing the role: ${title}. The salary is: ${salary}. The department id is: ${department_id}`);
+        });
+        start();
+      });
+    });
+};
+
