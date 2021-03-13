@@ -175,3 +175,55 @@ const viewRole = () => {
     });
 };
 
+// function to handle posting new items up for auction
+const addEmployee = () => {
+  // prompt for info about the item being put up for auction
+  inquirer
+    .prompt([
+      {
+        name: "firstName",
+        type: "input",
+        message: "What is the employee first name ?",
+      },
+      {
+        name: "lastName",
+        type: "input",
+        message: "What is the employee last name ?",
+      },
+      // {
+      //   name: "roleId",
+      //   type: "input",
+      //   message: "What is the employee role id (must be a number)?",
+      // },    
+      {
+        validate(value) {
+          if (isNaN(value) === false) {
+            return true;
+          }
+          return false;
+        },
+      },
+    ])
+    .then((answer) => {
+      // when finished prompting, insert a new item into the db with that info
+      connection.query(
+        "INSERT INTO employee SET ?",
+
+        {
+          first_name: answer.firstName,
+          last_name: answer.lastName,
+          role_id: answer.roleId,         
+        },
+        (err) => {
+          if (err) throw err;
+          const employeeData = res.map(({ id, name }) => ({
+            value: id, name: `${id} ${name}`
+          }));
+          console.log("The employee was created successfully!");
+          // re-prompt the user for if they want to bid or post
+          start();
+        }
+      );
+    });
+};
+
