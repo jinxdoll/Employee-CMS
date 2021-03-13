@@ -4,6 +4,8 @@
   "description": "Application that provides a content management system to track a company's employee's using node, inquirer and MySQL.",
   "main": "index.js",
   "scripts": {
+    "start": "node server",
+    "watch": "nodemon server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,6 +20,7 @@
   },
   "homepage": "https://github.com/jinxdoll/Employee-CMS#readme",
   "dependencies": {
+    "console.table": "^0.10.0",
     "inquirer": "^8.0.0",
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",
