@@ -56,7 +56,7 @@ const start = () => {
   inquirer
     .prompt({
       name: "action",
-      type: "rawlist",
+      type: "list",
       message: "Would you like to do?",
       choices: [
         "View departments",
@@ -148,7 +148,7 @@ const viewEmployee = () => {
         if (err) throw err;
         res.forEach(({  last_name, first_name, role_id }) => {
           console.log(
-            `You are now viewing the employee: ${first_name} ${last_name}. The employee role ID is: ${role_id}`);
+            `You are now viewing the employee: ${first_name} ${last_name}. The employee role ID is: ${role_id} and the employee manager ID is: ${manager_id}`);
         });
         start();
       });
@@ -190,19 +190,17 @@ const addEmployee = () => {
         type: "input",
         message: "What is the employee last name ?",
       },
-      // {
-      //   name: "roleId",
-      //   type: "input",
-      //   message: "What is the employee role id (must be a number)?",
-      // },    
       {
-        validate(value) {
-          if (isNaN(value) === false) {
-            return true;
-          }
-          return false;
-        },
+        name: "roleId",
+        type: "input",
+        message: "What is the employee role id ?",
       },
+      {
+        name: "managerId",
+        type: "input",
+        message: "What is the employee manager id ?",
+      },
+ 
     ])
     .then((answer) => {
       // when finished prompting, insert a new item into the db with that info
@@ -212,13 +210,11 @@ const addEmployee = () => {
         {
           first_name: answer.firstName,
           last_name: answer.lastName,
-          role_id: answer.roleId,         
+          role_id: answer.roleId,
+          manager_id: answer.managerId,
         },
         (err) => {
           if (err) throw err;
-          const employeeData = res.map(({ id, name }) => ({
-            value: id, name: `${id} ${name}`
-          }));
           console.log("The employee was created successfully!");
           // re-prompt the user for if they want to bid or post
           start();
@@ -236,14 +232,7 @@ const addDept = () => {
         type: "input",
         message: "What is the name of the department you would like to add ?",
       },
-      {
-        validate(value) {
-          if (isNaN(value) === false) {
-            return true;
-          }
-          return false;
-        },
-      },
+
     ])
     .then((answer) => {
       // when finished prompting, insert a new item into the db with that info
@@ -255,7 +244,7 @@ const addDept = () => {
         },
         (err) => {
           if (err) throw err;
-          console.log("The department was created successfully!");
+          console.log(`The department was created successfully!`);
           // re-prompt the user for if they want to bid or post
           start();
         }
@@ -282,14 +271,7 @@ const addRole = () => {
         type: "input",
         message: "What is the department id ? ",
       },
-      {
-        validate(value) {
-          if (isNaN(value) === false) {
-            return true;
-          }
-          return false;
-        },
-      },
+ 
     ])
     .then((answer) => {
       // when finished prompting, insert a new item into the db with that info
