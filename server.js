@@ -227,3 +227,86 @@ const addEmployee = () => {
     });
 };
 
+const addDept = () => {
+  // prompt for info about the item being put up for auction
+  inquirer
+    .prompt([
+      {
+        name: "departmentName",
+        type: "input",
+        message: "What is the name of the department you would like to add ?",
+      },
+      {
+        validate(value) {
+          if (isNaN(value) === false) {
+            return true;
+          }
+          return false;
+        },
+      },
+    ])
+    .then((answer) => {
+      // when finished prompting, insert a new item into the db with that info
+      connection.query(
+        "INSERT INTO department SET ?",
+
+        {
+          department_name: answer.departmentName,
+        },
+        (err) => {
+          if (err) throw err;
+          console.log("The department was created successfully!");
+          // re-prompt the user for if they want to bid or post
+          start();
+        }
+      );
+    });
+};
+
+const addRole = () => {
+  // prompt for info about the item being put up for auction
+  inquirer
+    .prompt([
+      {
+        name: "title",
+        type: "input",
+        message: "What is the employee job title you would like to add ?",
+      },
+      {
+        name: "salary",
+        type: "input",
+        message: "What would you like the starting salary to be ?",
+      },
+      {
+        name: "departmentId",
+        type: "input",
+        message: "What is the department id ? ",
+      },
+      {
+        validate(value) {
+          if (isNaN(value) === false) {
+            return true;
+          }
+          return false;
+        },
+      },
+    ])
+    .then((answer) => {
+      // when finished prompting, insert a new item into the db with that info
+      connection.query(
+        "INSERT INTO role SET ?",
+
+        {
+          title: answer.title,
+          salary: answer.salary || 0,
+          department_id: answer.departmentId,
+        },
+        (err) => {
+          if (err) throw err;
+          console.log("The department was created successfully!");
+          // re-prompt the user for if they want to bid or post
+          start();
+        }
+      );
+    });
+};
