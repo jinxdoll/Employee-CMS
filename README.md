@@ -1,23 +1,26 @@
-# Employee-CMS
-
-
-
-# Title: Employee-CMS
-# Description: Application that provides a content management system to track a company's employee's using node, inquirer and MySQL.
+# Title: 
+[Employee-CMS]
+# Description: 
+ Application that provides a content management system to track a company's employee's using node, inquirer and MySQL.
 # Table of Contents:
-- [Description](#Description)
-- [Installation](#Installation)
-- [Usage](#Usage)
-- [Licence](#Licence)
-- [Contributors](#Contributors)
-- [Test](#Test)
-- [Repository Link](#Repository)
-- [GitHub Info](#GitHub)
-# Installation: Node, MySql, Inquirer, Console.Table
-# Usage: Application invoked by using the command: node index.js
-# License: undefined
-# Contributors: undefined
-# Testing: None
+- [Title:](#title)
+- [Description:](#description)
+- [Table of Contents:](#table-of-contents)
+- [Installation:](#installation)
+- [Usage:](#usage)
+- [License:](#license)
+- [Testing:](#testing)
+- [GitHub Details:](#github-details)
+- [Screencastisy link:](#screencastisy-link)
+# Installation: 
+Node, MySql, Inquirer, Console.Table
+# Usage: 
+Application invoked by using the command: node index.js
+# License: 
+None
+
+# Testing: 
+- None
 # GitHub Details:
 - [GitHub Profile](https://github.com/jinxdoll)
 - [Email](null)
