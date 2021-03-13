@@ -112,7 +112,27 @@ const start = () => {
 
 };
 
-
+const viewDept = () => {
+  inquirer
+    .prompt({
+      name: "departmentName",
+      type: "input",
+      message: "What department would you like to search for?",
+    })
+    .then((answer) => {
+      const query = "SELECT department_name FROM department WHERE ?";
+      connection.query(query, { department_name: answer.departmentName },
+        (err, res) => {
+          if (err) throw err;
+          res.forEach(({ department_name }) => {
+            console.table('Department table is:'+ department_name)
+            console.log(`You are now viewing the ${department_name} department`);
+          });
+          start();
+        }
+      );
+    });
+};
 
 // const viewDB = () => {
 //   console.log("viewing all data from DB...\n");
