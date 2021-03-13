@@ -134,11 +134,24 @@ const viewDept = () => {
     });
 };
 
-// const viewDB = () => {
-//   console.log("viewing all data from DB...\n");
-//   connection.query("SELECT * FROM employee_db", (err, res) => {
-//     if (err) throw err;
-//     console.log(res);
-//     connection.end();
-//   });
-// };
+const viewEmployee = () => {
+  inquirer
+    .prompt({
+      name: "lastName",
+      type: "input",
+      message:
+        "What is the last name of the employee you would like to search for?",
+    })
+    .then((answer) => {
+      const query = "SELECT last_name, first_name, role_id FROM employee WHERE ?";
+      connection.query(query, { last_name: answer.lastName }, (err, res) => {
+        if (err) throw err;
+        res.forEach(({  last_name, first_name, role_id }) => {
+          console.log(
+            `You are now viewing the employee: ${first_name} ${last_name}. The employee role ID is: ${role_id}`);
+        });
+        start();
+      });
+    });
+};
+
