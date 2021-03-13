@@ -310,3 +310,85 @@ const addRole = () => {
       );
     });
 };
+
+const updateEmployee = () => {
+  // query the database for all items being auctioned
+  connection.query("SELECT * FROM employee", (err, results) => {
+    if (err) throw err;
+    // once you have the items, prompt the user for which they'd like to bid on
+    inquirer
+      .prompt([
+        {
+          name: "choice",
+          type: "rawlist",
+          choices() {
+            const choiceArray = [];
+            results.forEach(({ id }) => {
+              choiceArray.push(id);
+            });
+            return choiceArray;
+          },
+          message: "What is the employee id ?",
+        },
+        {
+          name: "lastName",
+          type: "input",
+          message: "What is the update last name ?",
+        },
+        {
+          name: "firstName",
+          type: "input",
+          message: "What is the updated first name ?",
+          validate(value) {
+            if (isNaN(value) === false) {
+              return true;
+            }
+            return false;
+          },
+        },
+      ])
+      .then((answer) => {
+        // get the information of the chosen item
+        let chosenEmployee;
+        results.forEach((id) => {
+          if (lastName.last_name && firstName.first_name === answer.choice) {
+            chosenEmployee = id;
+          }
+        });
+
+        // determine if bid was high enough
+        if (chosenEmployee.id == !NULL) {
+          // bid was high enough, so update db, let the user know, and start over
+          connection.query(
+            "UPDATE employee SET ? WHERE ?",
+            [
+              {
+                last_name: answer.lastName,
+                first_name: answer.firstName,
+              },
+              {
+                id: chosenEmployee.id,
+              },
+            ],
+            (error) => {
+              if (error) throw err;
+              console.log("Update successful!");
+              start();
+            }
+          );
+        } else {
+          console.log("Update failed. Please try again...");
+          start();
+        }
+      });
+  });
+};
+
+// const viewDB = () => {
+//   console.log("viewing all data from DB...\n");
+//   connection.query("SELECT * FROM employee_db", (err, res) => {
+//     if (err) throw err;
+//     console.log(res);
+//     connection.end();
+//   });
+// };
