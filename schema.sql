@@ -13,3 +13,16 @@ CREATE TABLE role(
   salary DECIMAL,
   department_id int
 );
+CREATE TABLE employee(
+  id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  first_name VARCHAR(30),
+  last_name VARCHAR (30),
+  role_id int,
+  manager_id int NULL
+);
+-- INSERT INTO employee (first_name, lastName) values ('Mariah', 'Carey');
+SELECT * FROM employee;
+-- INSERT INTO department (id, name) values ('1234', 'Music');
+SELECT * FROM department;
+-- INSERT INTO role (id, title, salary, department_id) values ('1','singer','987654');
+SELECT * FROM role;
